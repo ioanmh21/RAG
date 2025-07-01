@@ -1,0 +1,15 @@
+# Ignoră mediul virtual
+venv/
+
+# Cache și fișiere generate de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Fișiere sensibile
+.env
+*.env
+
+# Fișiere de configurare ale editorului
+.vscode/
+.idea/
