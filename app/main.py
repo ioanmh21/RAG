@@ -2,15 +2,11 @@ import vector_db as vdb
 
 data_path = 'data\\documents'
 
-data = vdb.extract_data(data_path)
-data = vdb.clean_data(data)
-chunks, metadatas = vdb.split_in_chunks(data)
+collection = vdb.solve_for_rag(data_path)
+
 
 # from fastapi import FastAPI
-
 # from pydantic import BaseModel
-
-
 
 # app=FastAPI()
 
