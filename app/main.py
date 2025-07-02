@@ -1,15 +1,12 @@
-import vector_db as vdb
+from app import vector_db as vdb
+from app.api import router
+from fastapi import FastAPI
 
-data_path = 'data\\documents'
+data_path = 'documents'
+collection = vdb.solve_for_vdb(data_path)
 
-collection = vdb.solve_for_rag(data_path)
-
-
-# from fastapi import FastAPI
-# from pydantic import BaseModel
-
-# app=FastAPI()
-
-# @app.get('/')
-# def read_root():
-#     return {"message": "Hello World"}
+app = FastAPI()
+app.include_router(router)
+@app.get("/")
+async def root():
+    return {"message": "Hello from root!"}

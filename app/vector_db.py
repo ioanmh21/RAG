@@ -4,6 +4,8 @@ import re
 from sentence_transformers import SentenceTransformer
 import chromadb
 
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
 def extract_data(data_path):
     data = []
 
@@ -56,8 +58,6 @@ def split_in_chunks(data, chunk_size = 300, overlap = 50):
     return chunks
 
 def get_data_base_data(chunks):
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-
     ids = []
     embeddings = []
     metadatas = []
@@ -88,7 +88,7 @@ def create_data_base(ids, embeddings, metadatas, documents, name = "my_rag_colle
     )
     return collection
 
-def solve_for_rag(data_path):
+def solve_for_vdb(data_path):
     data = extract_data(data_path)
     data = clean_data(data)
     chunks = split_in_chunks(data)
