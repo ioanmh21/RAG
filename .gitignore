@@ -1,6 +1,8 @@
 # Ignoră mediul virtual
 venv/
 
+chroma_db/
+
 # Cache și fișiere generate de Python
 __pycache__/
 *.py[cod]
