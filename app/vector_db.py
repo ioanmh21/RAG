@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 import chromadb
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
+os.environ["CHROMA_SERVER_NO_ANALYTICS"] = "1"
 
 def extract_data(data_path):
     data = []
