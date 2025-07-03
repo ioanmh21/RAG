@@ -2,46 +2,47 @@ import google.generativeai as genai
 import os
 import app.vector_db as vdb
 import asyncio
+from app.config import settings
 
-os.environ["CHROMA_SERVER_NO_ANALYTICS"] = "1"
+os.environ["CHROMA_SERVER_NO_ANALYTICS"] = settings.CHROMADB_NO_ANALYTICS
 
-data_path = 'documents'
+data_path = settings.DOCUMENTS_PATH
 
 collection = None
+ai_model = None
+
 try:
     collection = vdb.solve_for_vdb(data_path)
-    print("ChromaDB collection initializata cu succes.\n")
-except Exception as e:
-    print(f"Eroare la inițializarea bazei de date ChromaDB:{e}\n")
+    print("ChromaDB collection inițializată cu succes.\n")
 
-try: #configurare api ai
-    genai.configure(api_key = os.environ["GEMINI_API_KEY"])
-except KeyError:
-    print("Eroare: Variabila de mediu 'GEMINI_API_KEY' nu este setată.\n")
-    exit()
+    if not settings.GEMINI_API_KEY:
+        raise KeyError("Variabila de mediu 'GEMINI_API_API_KEY' nu este setată sau este goală.\n")
+    
+    genai.configure(api_key = settings.GEMINI_API_KEY)
+    
+    ai_model = genai.GenerativeModel(settings.LLM_MODEL_NAME)
+    print(f"Gemini model '{settings.LLM_MODEL_NAME}' inițializat cu succes.\n")
 
-ai_model = None
-try:
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-    MODEL_NAME = 'gemini-2.5-flash'
-    ai_model = genai.GenerativeModel(MODEL_NAME)
-    print(f"Gemini model '{MODEL_NAME}' initializat cu succes.\n")
-except KeyError:
-    print("Eroare: Variabila de mediu 'GEMINI_API_KEY' nu este setată.\n")
-    print("WARNING: Gemini API calls will likely fail.\n")
+except KeyError as e:
+    print(f"Eroare de configurare API Key: {e}\n")
+    print("WARNING: Apelurile către Gemini API vor eșua până la setarea cheii.\n")
+    ai_model = None
 except Exception as e:
-    print(f"Eroare la inițializarea modelului Gemini: {e}\n")
+    print(f"Eroare la inițializarea serviciilor (ChromaDB sau Gemini): {e}\n")
+    print("WARNING: Funcționalitatea RAG poate fi afectată. Verificați logurile.\n")
+    collection = None
+    ai_model = None
 
 async def answer_question(text : str):
     if collection is None or ai_model is None:
         raise Exception("Serviciul RAG nu este inițializat corect.\n")
 
-    # !!!   folosim threaduri deoarece pentru metodele care sunt synchronous !!!
+    # !!!   folosim threaduri pentru metodele care sunt synchronous !!!
 
     results = await asyncio.to_thread(
         collection.query,
-        query_texts=[text],
-        n_results=5,
+        query_texts = [text],
+        n_results = settings.CHUNKS_RETRIEVED,
     )
     #context
     if results and results.get('documents') and results['documents'][0]:
@@ -66,9 +67,6 @@ async def answer_question(text : str):
         if gemini_response and hasattr(gemini_response, 'text') and gemini_response.text:
             return gemini_response.text
         else:
-            # Handle cases where Gemini might not return text (e.g., safety block, empty response)
-            # You can inspect gemini_response.prompt_feedback or gemini_response.candidates
-            # for more details if needed.
             print(f"Atenție: Răspunsul Gemini nu conține text. Detalii: {gemini_response}\n")
             return "Nu am putut genera un răspuns.\n"
 

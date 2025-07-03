@@ -3,8 +3,11 @@ import os
 import re
 import chromadb
 from chromadb.utils.embedding_functions import GoogleGenerativeAiEmbeddingFunction
+from app.config import settings
 
-embedding_function = GoogleGenerativeAiEmbeddingFunction(api_key = os.environ["GEMINI_API_KEY"])
+os.environ["CHROMA_SERVER_NO_ANALYTICS"] = settings.CHROMADB_NO_ANALYTICS
+
+embedding_function = GoogleGenerativeAiEmbeddingFunction(api_key = settings.GEMINI_API_KEY)
 
 def extract_text(data_path):
     data = []
@@ -53,7 +56,7 @@ def extract_text(data_path):
             continue
     return data
 
-def chunk_text(text, max_words = 200, overlap_words = 40):
+def chunk_text(text, max_words = settings.CHUNK_MAX_WORDS, overlap_words = settings.CHUNK_OVERLAP_WORDS):
     words = text.split()
     chunks = []
     for i in range(0, len(words), max_words - overlap_words):
@@ -63,8 +66,13 @@ def chunk_text(text, max_words = 200, overlap_words = 40):
     return chunks
 
 def solve_for_vdb(data_path : str):
-    client = chromadb.PersistentClient(path = "./chroma_db")
-    collection_name = "my_document_collection"
+    client = chromadb.PersistentClient(path = settings.CHROMADB_PERSIST_PATH)
+    collection_name = settings.CHROMADB_COLLECTION_NAME
+    
+    collection = client.get_or_create_collection(
+        name = collection_name,
+        embedding_function = embedding_function
+    )
     
     collection = client.get_or_create_collection(
         name = collection_name,
