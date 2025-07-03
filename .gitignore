@@ -1,12 +1,14 @@
-# Ignoră mediul virtual
-venv/
-
+# Baza de date ChromaDB
 chroma_db/
 
 # Cache și fișiere generate de Python
 __pycache__/
-*.py[cod]
-*.pyo
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.venv/
+env/
+venv/
 
 # Fișiere sensibile
 .env

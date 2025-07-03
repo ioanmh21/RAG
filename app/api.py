@@ -2,14 +2,30 @@ import fastapi
 import os
 from pydantic import BaseModel
 from app import rag_service
-import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 class Question(BaseModel):
     text : str
 
-
 app = fastapi.FastAPI()
 router = fastapi.APIRouter()
+
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    f"http://localhost:{8001}",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
 
 @app.get("/")
 async def root():
@@ -30,6 +46,3 @@ async def answer_question(question : Question):
             detail = str(e))
 
 app.include_router(router)
-
-if __name__ == "__main__":
-    uvicorn.run(app, host = "127.0.0.1", port = 8000) 

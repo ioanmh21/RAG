@@ -11,9 +11,13 @@ class Settings:
 
     CHROMADB_NO_ANALYTICS: str = "1" # Setează "1" pentru a dezactiva telemetria ChromaDB
 
-    CHUNK_MAX_WORDS: int = 60
-    CHUNK_OVERLAP_WORDS: int = 10
+    CHUNK_MAX_WORDS: int = 150
+    CHUNK_OVERLAP_WORDS: int = 30
 
     CHUNKS_RETRIEVED: int = 5
+
+    HOST: str = os.getenv("APP_HOST", "127.0.0.1") # Poate fi "0.0.0.0" pentru acces extern
+    PORT: int = int(os.getenv("APP_PORT", 8000)) # Portul pe care rulează serverul
+
 
 settings = Settings()
