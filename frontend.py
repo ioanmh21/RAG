@@ -13,7 +13,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     # Suprascrie logica pentru a servi index.html dacă se accesează rădăcina
     def do_GET(self):
         if self.path == '/':
-            self.path = '/index.html'
+            self.path = '/interface.html'
         return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 print(f"Serving files from: {WEB_DIR}")

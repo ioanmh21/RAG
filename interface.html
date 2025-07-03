@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="interface.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Asistent RAG
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message ai">Bună! Sunt asistentul tău RAG. Pune-mi o întrebare despre documentele tale.</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" class="chat-input" placeholder="Scrie mesajul tău...">
+            <button id="send-button" class="send-button">Trimite</button>
+        </div>
+    </div>
+
+    <script src="interface.js"></script>
+</body>
+</html>
