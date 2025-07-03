@@ -9,6 +9,7 @@ __pycache__/
 .venv/
 env/
 venv/
+venv_new_minimal/
 
 # Fișiere sensibile
 .env
