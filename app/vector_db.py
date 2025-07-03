@@ -56,14 +56,59 @@ def extract_text(data_path):
             continue
     return data
 
-def chunk_text(text, max_words = settings.CHUNK_MAX_WORDS, overlap_words = settings.CHUNK_OVERLAP_WORDS):
-    words = text.split()
+
+# def chunk_text(text, max_words = settings.CHUNK_MAX_WORDS, overlap_words = settings.CHUNK_OVERLAP_WORDS):
+#     words = text.split()
+#     chunks = []
+#     for i in range(0, len(words), max_words - overlap_words):
+#         chunk_words = words[i : i + max_words]
+#         chunk_text = " ".join(chunk_words)
+#         chunks.append(chunk_text)
+#     return chunks
+
+
+def chunk_text(text, max_words=None, overlap_words=None):
+    if max_words is None:
+        max_words = settings.CHUNK_MAX_WORDS
+    if overlap_words is None:
+        overlap_words = settings.CHUNK_OVERLAP_WORDS
+
+    lines = text.split('\n')
     chunks = []
-    for i in range(0, len(words), max_words - overlap_words):
-        chunk_words = words[i : i + max_words]
-        chunk_text = " ".join(chunk_words)
-        chunks.append(chunk_text)
-    return chunks
+    current_chunk_lines = []
+    current_chunk_word_count = 0
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        line_words = line.split()
+        line_word_count = len(line_words)
+
+        if current_chunk_word_count + line_word_count > max_words and current_chunk_lines:
+            chunks.append("\n".join(current_chunk_lines))
+
+            overlap_content = []
+            overlap_count = 0
+            for ol_line in reversed(current_chunk_lines):
+                ol_line_words = ol_line.split()
+                if overlap_count + len(ol_line_words) <= overlap_words:
+                    overlap_content.insert(0, ol_line)
+                    overlap_count += len(ol_line_words)
+                else:
+                    break
+            
+            current_chunk_lines = overlap_content
+            current_chunk_word_count = overlap_count
+        
+        current_chunk_lines.append(line)
+        current_chunk_word_count += line_word_count
+
+    if current_chunk_lines:
+        chunks.append("\n".join(current_chunk_lines))
+    
+    return [chunk for chunk in chunks if chunk.strip()]
 
 def solve_for_vdb(data_path : str):
     client = chromadb.PersistentClient(path = settings.CHROMADB_PERSIST_PATH)
