@@ -4,27 +4,24 @@ const chatMessages = document.getElementById('chat-messages');
 
 // Adresa URL a backend-ului tău FastAPI
 // Asigură-te că aceasta corespunde cu host-ul și portul pe care rulează FastAPI.
-// De obicei, pentru dezvoltare locală, este http://127.0.0.1:8000
 const BACKEND_URL = 'http://127.0.0.1:8000'; 
 
-// Funcție pentru a adăuga un mesaj în fereastra de chat
 function addMessage(text, sender) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender);
     messageDiv.textContent = text;
     chatMessages.appendChild(messageDiv);
-    // Scrollează automat la ultimul mesaj
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 // Funcție pentru a trimite mesajul către backend
 async function sendMessage() {
     const question = userInput.value.trim();
-    if (!question) return; // Nu trimite mesaje goale
+    if (!question) return;
 
     addMessage(question, 'user'); // Afișează mesajul utilizatorului
-    userInput.value = ''; // Golește câmpul de intrare
-    sendButton.disabled = true; // Dezactivează butonul în timpul procesării
+    userInput.value = '';
+    sendButton.disabled = true;
 
     const loadingIndicator = document.createElement('div');
     loadingIndicator.classList.add('loading-indicator');
@@ -53,15 +50,14 @@ async function sendMessage() {
         console.error('Eroare la trimiterea mesajului:', error);
         addMessage(`Ne pare rău, a apărut o eroare: ${error.message}. Vă rugăm să încercați din nou.`, 'ai');
     } finally {
-        sendButton.disabled = false; // Reactivează butonul
+        sendButton.disabled = false;
         if (loadingIndicator.parentNode) {
-            loadingIndicator.parentNode.removeChild(loadingIndicator); // Elimină indicatorul de încărcare
+            loadingIndicator.parentNode.removeChild(loadingIndicator);
         }
-        userInput.focus(); // Pune focus înapoi pe câmpul de intrare
+        userInput.focus();
     }
 }
 
-// Adaugă evenimente pentru buton și Enter
 sendButton.addEventListener('click', sendMessage);
 userInput.addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
@@ -69,7 +65,6 @@ userInput.addEventListener('keypress', function(event) {
     }
 });
 
-// Pune focus pe câmpul de intrare la încărcarea paginii
 window.onload = () => {
     userInput.focus();
 };
