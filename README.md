@@ -6,7 +6,7 @@ Acest proiect oferă o soluție completă pentru un chatbot RAG personalizat. Ac
 
 ### 2. Funcționalități
 
-* **Suport Multi-Document:** Procesează și indexează fișiere PDF și TXT.
+* **Suport Multi-Document:** Procesează și indexează fișiere `.pdf` și `.txt`.
 * **Generare AI cu Gemini:** Utilizează modelul Google Gemini (ex: `gemini-2.5-pro`) pentru înțelegerea limbajului natural și generarea răspunsurilor.
 * **Bază de Date Vectorială Persistentă:** Folosește ChromaDB pentru stocarea și regăsirea eficientă a fragmentelor de documente.
 * **Backend FastAPI:** O interfață API REST robustă și asincronă pentru comunicarea cu frontend-ul.
@@ -106,10 +106,10 @@ Această metodă este recomandată pentru dezvoltare și testare rapidă, fără
 
 ### 7. Utilizare
 
-1.  Accesează interfața web la `http://localhost:8001`.
+1.  **Accesează interfața web la `http://localhost:8001`.**
 2.  **Asigură-te că `.env` este inițializat corect. [ ENV](#env)**
 3.  **Sunt suportate doar documente `.txt` și `.pdf`.**
 4.  **Dacă se modifică directorul `documents/` trebuie șters directorul `chroma_db/`, înainte de pornirea aplicației, altfel AI-ul va da răspunsuri eronate.**
-5.  **Nu uita că trebuie să setezi in `.env` GEMINI_API_KEY**
+5.  **Nu uita că trebuie să setezi in `.env` GEMINI_API_KEY!**
 
 
