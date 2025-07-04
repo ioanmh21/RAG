@@ -113,6 +113,6 @@ Această metodă este recomandată pentru dezvoltare și testare rapidă, fără
 5.  **Nu uita că trebuie să setezi in `.env` GEMINI_API_KEY!**
 
 <div style="display: flex; gap: 10px;">
-  <img src="images/rag1.png" alt="rag1" width="700"/>
-  <img src="images/rag2.png" alt="rag2" width="235"/>
+  <img src="images/rag1.png" alt="rag1" width="500"/>
+  <img src="images/rag2.png" alt="rag2" width="170"/>
 </div>
