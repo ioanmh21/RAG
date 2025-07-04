@@ -112,6 +112,13 @@ Această metodă este recomandată pentru dezvoltare și testare rapidă, fără
 4.  **Dacă se modifică directorul `documents/` trebuie șters directorul `chroma_db/`, înainte de pornirea aplicației, altfel AI-ul va da răspunsuri eronate.**
 5.  **Nu uita că trebuie să setezi in `.env` GEMINI_API_KEY!**
 
+### 8. Observații privind Optimizarea RAG (Prompt & Chunking)
+
+1. Promptul trimis la AI joacă un rol important in răspunsul.
+2. Strategia de chunking joacă un rol important in răspunsul.
+3. Numărul de chunk-uri trimise cu întrebarea joacă un rol important in răspuns.
+
+<br><br>
 <div style="display: flex; gap: 10px;">
   <img src="images/rag1.png" alt="rag1" width="500"/>
   <img src="images/rag2.png" alt="rag2" width="170"/>
