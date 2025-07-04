@@ -23,7 +23,4 @@ COPY interface.js /app/interface.js
 EXPOSE 8000
 EXPOSE 8001
 
-# Definește comanda implicită care va rula atunci când un container pornește din această imagine.
-# Aceasta va fi comanda de pornire pentru backend-ul FastAPI.
-# Această comandă va fi suprascrisă pentru serviciul 'frontend' în docker-compose.yml.
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
