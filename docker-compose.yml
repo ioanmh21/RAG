@@ -3,45 +3,31 @@ version: '3.8'
 services:
   backend:
     build:
-      context: . # Indică Docker Compose să caute Dockerfile-ul în directorul curent (C:\Users\Ioan\RAG\)
-      dockerfile: Dockerfile # Specifică numele fișierului Dockerfile
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000" # Mapează portul 8000 de pe host (mașina ta) la portul 8000 al containerului backend
+      - "8000:8000"
     volumes:
-      # Montează directorul local al proiectului în directorul /app din container.
-      # Aceasta este excelentă pentru dezvoltare, deoarece modificările din codul sursă local
-      # vor fi reflectate instantaneu în container fără a necesita reconstruirea imaginii.
-      - .:/app 
+      - .:/app
     networks:
-      - rag_network # Conectează acest serviciu la o rețea Docker internă
+      - rag_network
 
   frontend:
     build:
-      context: . # Indică Docker Compose să caute Dockerfile-ul în directorul curent
-      dockerfile: Dockerfile # Folosește același Dockerfile
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8001:8001" # Mapează portul 8001 de pe host la portul 8001 al containerului frontend
+      - "8001:8001"
     volumes:
-      # Montează directorul local al proiectului în directorul /app din container.
       - .:/app
     depends_on:
-      - backend # Asigură că serviciul 'backend' pornește înainte de 'frontend'
+      - backend
     networks:
-      - rag_network # Conectează acest serviciu la aceeași rețea Docker internă
-    # Suprascrie comanda implicită (CMD) din Dockerfile pentru acest serviciu.
-    # Acest container va rula scriptul frontend.py.
-    command: python frontend.py 
+      - rag_network
+    command: python frontend.py
     environment:
-      # Această variabilă de mediu este utilă pentru scripturile care rulează în container
-      # dacă au nevoie să știe adresa backend-ului (ex: frontend.py ar putea-o folosi).
-      # `http://backend:8000` funcționează deoarece `backend` este numele serviciului
-      # în rețeaua Docker Compose.
-      # IMPORTANT: Pentru `interface.js` (care rulează în browser), BACKEND_URL-ul ar trebui să rămână
-      # `http://127.0.0.1:8000` sau `http://localhost:8000` deoarece browserul accesează direct portul mapat.
-      BACKEND_URL: http://backend:8000 
+      BACKEND_URL: http://backend:8000
 
-# Definește rețelele utilizate de serviciile Docker Compose.
-# Aceasta permite serviciilor să comunice între ele folosind numele serviciilor ca hostname-uri.
 networks:
   rag_network:
-    driver: bridge # Folosește driver-ul implicit 'bridge' pentru rețele interne.
+    driver: bridge
