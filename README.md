@@ -1,192 +1,115 @@
-Proiect de Învățare: Sistem RAG cu FastAPI pentru Începători
+# RAG Chatbot
 
-## 🎯 Ce vei învăța din acest proiect
+### 1. Descriere Generală
 
-### Backend Basics
-- Cum funcționează un API REST
-- Ce înseamnă endpoint-uri și cum le creezi
-- Cum primești și trimiți date în format JSON
-- Cum documentezi automat API-ul tău cu Swagger
+Acest proiect oferă o soluție completă pentru un chatbot RAG personalizat. Acesta îți permite să încarci propriile documente (fișiere `.pdf` și `.txt`) într-o bază de date vectorială (ChromaDB). Când un utilizator pune o întrebare, sistemul extrage fragmente relevante din documentele tale, le combină cu întrebarea originală și le trimite către modelul Google Gemini pentru a genera un răspuns contextualizat.
 
-### AI/RAG Basics
-- Ce sunt embeddings și cum ajută la căutare semantică
-- Cum funcționează un sistem RAG simplu
-- Cum folosești un API de AI (Gemini) în aplicația ta
-- Cum stochezi și cauți în documente text
+### 2. Funcționalități
 
-## 📁 Structura Simplă a Proiectului
+* **Suport Multi-Document:** Procesează și indexează fișiere PDF și TXT.
+* **Generare AI cu Gemini:** Utilizează modelul Google Gemini (ex: `gemini-2.5-pro`) pentru înțelegerea limbajului natural și generarea răspunsurilor.
+* **Bază de Date Vectorială Persistentă:** Folosește ChromaDB pentru stocarea și regăsirea eficientă a fragmentelor de documente.
+* **Backend FastAPI:** O interfață API REST robustă și asincronă pentru comunicarea cu frontend-ul.
+* **Frontend Web Simplu:** O interfață utilizator bazată pe HTML, CSS și JavaScript, ușor de utilizat și de personalizat.
+* **Chunking:** Procesul de împărțire a documentelor în fragmente mai mici, cu posibilitate de suprapunere, pentru o regăsire mai eficientă.
+* **Caching:** Utilizează `lru_cache` pentru a îmbunătăți performanța prin stocarea în memorie a rezultatelor interogărilor ChromaDB și a răspunsurilor Gemini, optimizand performanta pentru apelurile repetitive.
+* **Docker:** Implementare ușoară și portabilă folosind containere Docker pentru backend și frontend.
 
-```
-rag_project/
+### 3. Tehnologii Utilizate
+
+* **Backend:**
+    * Python 3.10+
+    * [FastAPI](https://fastapi.tiangolo.com/) - Cadrul web pentru API.
+    * [Uvicorn](https://www.uvicorn.org/) - Server ASGI pentru FastAPI.
+    * [ChromaDB](https://www.trychroma.com/) - Bază de date vectorială.
+    * [Google Generative AI SDK](https://pypi.org/project/google-generativeai/) - Interacțiunea cu modelul Gemini.
+    * [PyPDF2](https://pypi.org/project/PyPDF2/) - Pentru extragerea textului din PDF-uri.
+    * [python-dotenv](https://pypi.org/project/python-dotenv/) - Pentru gestionarea variabilelor de mediu.
+* **Frontend:**
+    * HTML5
+    * CSS3 (cu [Tailwind CSS CDN](https://tailwindcss.com/docs/installation/play-cdn))
+    * JavaScript
+
+ ### 4. Structura Proiectului
+
+```plaintext
 ├── app/
-│ ├── main.py # Punctul de pornire al aplicației
-│ ├── api.py # Endpoint-urile tale
-│ ├── rag_service.py # Logica pentru RAG
-│ ├── vector_db.py # Lucrul cu baza de date vectorială
-│ └── config.py # Configurări (API keys, etc.)
-│
-├── data/
-│ └── documents/ # Folder cu documente text simple
-│ ├── doc1.txt
-│ ├── doc2.txt
-│ └── doc3.txt
-│
-├── requirements.txt # Lista de librării Python necesare
-├── .env # Variabile de mediu (API keys)
-├── .env.example # Template pentru .env
-├── Dockerfile # Pentru a rula în Docker
-└── README.md # Documentația proiectului
+│   ├── init.py
+│   ├── api.py           # Definiții API FastAPI, rute și gestionarea CORS
+│   ├── config.py        # Setări globale ale aplicației și variabile de mediu
+│   ├── main.py          # Punctul de intrare al aplicației backend Uvicorn
+│   ├── rag_service.py   # Logica principală RAG (interogare ChromaDB, generare Gemini)
+│   └── vector_db.py     # Logica de extragere, chunking și persistență ChromaDB
+├── documents/           # Director pentru documentele tale (.pdf, .txt)
+├── chroma_db/           # Director unde ChromaDB stochează datele persistent (creat automat)
+├── .env                 # Fișier pentru variabilele de mediu (ex: GEMINI_API_KEY)
+├── Dockerfile           # Instrucțiuni pentru construirea imaginii Docker
+├── docker-compose.yml   # Definește serviciile Docker pentru backend și frontend
+├── frontend.py          # Server Python simplu pentru fișierele statice ale frontend-ului
+├── interface.html       # Fișierul HTML al interfeței chatbot-ului
+├── interface.css        # Stiluri CSS pentru interfață
+├── interface.js         # Logica JavaScript pentru interactivitatea frontend-ului
+├── requirements.txt     # Dependințe Python ale proiectului
+└── README.md
 ```
 
-## 🛠️ Tehnologii de Bază
+### 5. Configurare și Rulare (Local - Mediu Virtual) - Metoda 1:
 
-### Pentru Backend
-- **FastAPI**: Framework simplu pentru a crea API-uri
-- **Uvicorn**: Server pentru a rula aplicația FastAPI
-- **Pydantic**: Pentru validarea datelor (vine cu FastAPI)
+Această metodă este recomandată pentru dezvoltare și testare rapidă, fără a implica Docker.
 
-### Pentru AI/RAG
-- **Google Generative AI**: Pentru a folosi Gemini API
-- **ChromaDB**: Bază de date simplă pentru vectori
-- **Sentence Transformers**: Pentru a crea embeddings local (opțional)
+1.  **Clonează repozitoriul:**
+    ```bash
+    git clone https://github.com/ioanmh21/RAG
+    cd RAG
+    ```
 
-### Pentru Development
-- **Python 3.10+**: Limbajul de programare
-- **Docker**: Pentru a împacheta aplicația (opțional la început)
-- **python-dotenv**: Pentru a citi variabile din .env
+2.  **Creează și activează un Mediu Virtual:**  
+    * Nu este obligatoriu, dar este o practică bună.
+    ```bash
+    python -m venv venv
+    # Pe Windows (PowerShell):
+    .\venv\Scripts\Activate.ps1
+    # Pe Windows (Command Prompt):
+    .\venv\Scripts\activate.bat
+    ```
 
-## 🚀 Ce va face aplicația ta
+3.  **Instalează Dependențele Python:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+<a id="env"></a>
 
-### 1. Încărcare Documente (la pornire)
-- Citește fișiere .txt din folderul `data/documents/`
-- Creează embeddings (reprezentări numerice) pentru fiecare document
-- Le salvează în ChromaDB pentru căutare rapidă
+4.  **Creează fișierul `.env`:**  
+    * Redenumește fișierul `.env.example` în `.env` și completează-l, sau creează un fișier `.env` nou, cu conținutul din `.env.example` completat.
+    * **Asigură-te că `GEMINI_API_KEY` este setată!** Fără ea, modelul AI nu va funcționa.
 
-### 2. Endpoint Principal: POST /ask
-- Primește o întrebare de la utilizator
-- Caută în baza de date cele mai relevante documente
-- Trimite întrebarea + context către Gemini
-- Returnează răspunsul generat
+5.  **Adaugă Documente:**
+    * Plasează fișierele tale `.pdf` și `.txt` în directorul `./documents/`.
 
-### 3. Endpoint Secundar: GET /documents
-- Arată ce documente sunt în sistem
-- Util pentru debugging
+6.  **Rulează Backend-ul FastAPI:**
+    ```bash
+    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ```
+    * Vei vedea mesaje în consolă, indicând că serverul a pornit.
 
-### 4. Documentație Automată
-- FastAPI generează automat documentație la `/docs`
-- Poți testa API-ul direct din browser
+7.  **Rulează Serverul Frontend:**
+    * Într-un terminal nou (menținând mediul virtual activ):
+    ```bash
+    python frontend.py
+    ```
 
-## 📝 Pași de Implementare
+8.  **Accesează Aplicația:**
+    * Deschide browserul web și navighează la: `http://localhost:8001` / adresa indicată de terminalul frontend-ului.
 
-### 1: Setup și Hello World
-1. Instalează Python și creează virtual environment
-2. Instalează FastAPI și Uvicorn
-3. Creează primul endpoint simplu care returnează "Hello World"
-4. Învață să rulezi serverul și să accesezi `/docs`
+### 6. Docker Construiește și Rulează Aplicația - Metoda 2:
+    docker-compose up --build --force-recreate
 
-### 2: Lucrul cu Date
-1. Învață să primești date prin POST
-2. Creează modele Pydantic pentru request și response
-3. Adaugă validare pentru input
-4. Practică cu endpoint-uri CRUD simple
+### 7. Utilizare
 
-### 3: Integrare ChromaDB
-1. Instalează și configurează ChromaDB
-2. Învață să adaugi documente în baza de date
-3. Implementează căutarea simplă
-4. Testează cu câteva documente mock
+1.  Accesează interfața web la `http://localhost:8001`.
+2.  **Asigură-te că `.env` este inițializat corect. [ ENV](#env)**
+3.  **Sunt suportate doar documente `.txt` și `.pdf`.**
+4.  **Dacă se modifică directorul `documents/` trebuie șters directorul `chroma_db/`, înainte de pornirea aplicației, altfel AI-ul va da răspunsuri eronate.**
+5.  **Nu uita că trebuie să setezi in `.env` GEMINI_API_KEY**
 
-### 4: Conectare la Gemini
-1. Obține API key pentru Gemini
-2. Învață să faci request-uri către API
-3. Creează funcții simple de generare text
-4. Gestionează erorile și rate limits
 
-### 5: Implementare RAG
-1. Combină căutarea cu generarea
-2. Construiește prompt-uri eficiente
-3. Testează cu diferite întrebări
-4. Optimizează rezultatele
-
-### 6: Polish și Docker
-1. Adaugă logging pentru debugging
-2. Îmbunătățește gestionarea erorilor
-3. Creează Dockerfile simplu
-4. Documentează cum se folosește aplicația
-
-## 💡 Concepte Importante de Înțeles
-
-### API REST Basics
-- **GET**: Pentru a citi date
-- **POST**: Pentru a trimite date
-- **Endpoint**: O adresă URL care face ceva specific
-- **Request/Response**: Cerere și răspuns în format JSON
-
-### RAG Concepts
-- **Embedding**: Transformarea textului în numere pentru comparație
-- **Similarity Search**: Găsirea documentelor similare semantic
-- **Context**: Informația relevantă pe care o dai AI-ului
-- **Prompt**: Instrucțiunea completă pe care o trimiți către AI
-
-### Python Async Basics
-- **async/await**: Pentru operații care durează mult (API calls)
-- **Concurrency**: Cum să gestionezi mai multe request-uri simultan
-
-## 🎓 Resurse de Învățare Recomandate
-
-### Pentru FastAPI
-1. Tutorial oficial FastAPI (foarte bun pentru începători)
-2. Video-uri YouTube despre REST APIs
-3. Documentația pentru HTTP status codes
-
-### Pentru AI/RAG
-1. Concepte de base despre embeddings
-2. Tutoriale simple ChromaDB
-3. Documentația Gemini API
-
-### Pentru Python
-1. Async programming basics
-2. Environment variables și configurare
-3. Error handling în Python
-
-## ⚠️ Greșeli Comune de Evitat
-
-1. **Nu hardcoda API keys** - folosește întotdeauna .env
-2. **Nu uita error handling** - API-urile externe pot pica
-3. **Începe simplu** - nu adăuga features până nu merge baza
-4. **Testează manual des** - folosește Swagger UI
-5. **Nu ignora documentația** - scrie README pe măsură ce lucrezi
-
-## 🎯 Obiective Minime pentru Proiect Funcțional
-
-1. **3-5 endpoint-uri funcționale**
-- POST /ask - întrebare principală
-- GET /health - verificare că merge
-- GET /documents - listare documente
-
-2. **Cel puțin 5 documente text** în sistem
-
-3. **Răspunsuri coerente** la întrebări despre conținutul documentelor
-
-4. **Documentație Swagger** funcțională și ușor de înțeles
-
-5. **README clar** cu instrucțiuni de instalare și utilizare
-
-## 🚦 Cum Știi că Ai Reușit
-
-- [ ] Aplicația pornește fără erori
-- [ ] Poți accesa `/docs` și vezi endpoint-urile tale
-- [ ] Poți face o întrebare și primești un răspuns relevant
-- [ ] Codul e organizat și ușor de citit
-- [ ] Ai învățat conceptele de bază ale backend-ului
-- [ ] Înțelegi cum funcționează un sistem RAG simplu
-
-## 💪 Următorii Pași (După ce Termini Basics)
-
-1. Adaugă mai multe tipuri de documente (PDF, etc.)
-2. Implementează un sistem simplu de utilizatori
-3. Adaugă caching pentru performanță
-4. Experimentează cu alți provideri de AI
-5. Deploy pe un serviciu gratuit (Render, Railway)
-
-Ține minte: scopul este să înveți, nu să faci sistemul perfect din prima! Începe simplu și adaugă complexitate gradual.
