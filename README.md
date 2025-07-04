@@ -112,4 +112,7 @@ Această metodă este recomandată pentru dezvoltare și testare rapidă, fără
 4.  **Dacă se modifică directorul `documents/` trebuie șters directorul `chroma_db/`, înainte de pornirea aplicației, altfel AI-ul va da răspunsuri eronate.**
 5.  **Nu uita că trebuie să setezi in `.env` GEMINI_API_KEY!**
 
-
+<div style="display: flex; gap: 10px;">
+  <img src="images/rag1.png" alt="rag1" width="700"/>
+  <img src="images/rag2.png" alt="rag2" width="235"/>
+</div>
